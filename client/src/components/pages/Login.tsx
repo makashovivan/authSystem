@@ -1,9 +1,20 @@
 import React from 'react'
+import AuthForm from '../AuthForm'
+
+import { IauthFormState } from '../../reducers/authFormReducer'
 
 
-const Login: React.FC = () => {
+interface IloginProps  {
+  authFormState: IauthFormState,
+  authFormDispatch: any
+}
+
+const Login: React.FC<IloginProps> = ({authFormState, authFormDispatch}) => {
+
   return (
-    <div>Login</div>
+    <div>
+      <AuthForm authFormState = {authFormState} authFormDispatch = {authFormDispatch} />
+    </div>
   )
 }
 

@@ -3,29 +3,25 @@ const LOGIN = 'LOGIN'
 const LOGOUT = 'LOGOUT'
 export const storageName = 'userData'
 
-
-interface IauthState {
+export interface IauthState {
   isAuth: boolean,
   token: any,
-  email: string,
-  password: string,
+ 
 }
 
 interface IauthAction {
   type: string,
-  token: any,
+  token?: any,
 }
 
 export const authInitialState: IauthState = {
   isAuth: false,
   token: null,
-  email: '',
-  password: '',
 }
-
 
 const authReducer = (state: IauthState, action: IauthAction) => {
   switch (action.type) {
+    
     case LOGIN:
       state.token = action.token
       localStorage.setItem(storageName, JSON.stringify({
