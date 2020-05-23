@@ -1,7 +1,6 @@
 import React from 'react'
 import TextField from "@material-ui/core/TextField/";
-import Button from "@material-ui/core/Button";
-import { IauthFormState, typeEmailActionCreator, typePasswordActionCreator, submitClickActionCreator } from '../reducers/authFormReducer'
+import { IauthFormState, typeEmailActionCreator, typePasswordActionCreator } from '../reducers/authFormReducer'
 
 interface IAuthFormProps  {
   authFormState: IauthFormState,
@@ -34,13 +33,6 @@ const AuthForm: React.FC<IAuthFormProps> = ({authFormState, authFormDispatch}) =
         onChange={e => authFormDispatch( typePasswordActionCreator(e.target.value))}
       />
       <br/>
-      <br/>
-      <Button 
-        variant="contained"
-        disabled = {authFormState.submitDisabled}
-        onClick = {() => authFormDispatch(submitClickActionCreator())}
-        >Default</Button>
-      <div>{authFormState.email + '  ' + authFormState.password}</div>
   </div>
   )
 }
