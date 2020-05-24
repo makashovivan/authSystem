@@ -1,4 +1,12 @@
-import {model, Schema, Types} from 'mongoose'
+import {model, Schema, Types, Document} from 'mongoose'
+import { IUser } from './User'
+
+export interface IDocument extends Document {
+  title: string,
+  text: string,
+  date: Date,
+  owner: IUser['_id']
+}
 
 const schema = new Schema({
   title: {type: String, required: true},
@@ -7,4 +15,4 @@ const schema = new Schema({
   owner: {type: Types.ObjectId, ref: 'User'},
 })
 
-export default model('Document', schema)  
+export default model<IDocument>('Document', schema)  
