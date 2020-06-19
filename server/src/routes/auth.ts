@@ -48,6 +48,55 @@ router.post(
 })
 
 
+router.post(
+  '/login',
+  [
+    check('email', 'Введите корректный email').normalizeEmail().isEmail(),
+    check('password', 'Введите пароль').exists()
+  ],
+  async (req: Request, res: Response) => {
+  try {
+    const errors = validationResult(req)
+    console.log("LOGIN REQUEST: ", req.body)
+
+
+    if (!errors.isEmpty()) {
+      console.log("IM HERE")
+      return res.status(400).json({
+        errors: errors.array(),
+        message: 'Некорректные данные при входе в систему'
+      })
+    }
+
+    const {email, password} = req.body
+    const user = await User.findOne({ email })
+
+    if (!user) {
+      console.log('NOUSER')
+      return res.status(400).json({ message: 'Пользователь не найден' })
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password)
+
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Неверный пароль, попробуйте снова' })
+    }
+
+    const token = jwt.sign(
+      { userId: user.id },
+      secretConfig.jwtKey,
+      { expiresIn: '1h' }
+    )
+
+    res.json({ token, userId: user.id })
+
+  } catch (e) {
+    res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+  }
+})
+
+
+
 
 
 

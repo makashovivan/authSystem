@@ -1,4 +1,5 @@
 import express, { Application } from 'express'
+import bodyParser, {OptionsJson} from 'body-parser'
 import mongoose from 'mongoose'
 import path from 'path'
 import { router as authRoute } from './routes/auth'
@@ -6,6 +7,9 @@ import { router as documentsRoute } from './routes/documents'
 import secretConfig from './secretConfig'
 
 const app : Application = express()
+
+app.use(express.urlencoded());
+app.use(express.json())
 
 app.use('/api/auth', authRoute)
 app.use('/api/documents', documentsRoute)
