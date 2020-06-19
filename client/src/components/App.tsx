@@ -48,7 +48,7 @@ const App : React.FC = () => {
           <Register/>
         </Route>
         <Route exact path = '/login'>
-          <Login authFormState = {authFormState} authFormDispatch = {authFormDispatch} />
+          <Login authFormState = {authFormState} authFormDispatch = {authFormDispatch} authState = {authState} authDispatch = {authDispatch} />
         </Route>
         <Redirect to = '/login'/>
       </Switch>

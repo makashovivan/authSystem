@@ -2,13 +2,17 @@ import React from 'react'
 import AuthForm from '../AuthForm'
 import Button from "@material-ui/core/Button";
 import Card from '@material-ui/core/Card';
+import {useHttp} from '../../hooks/httpHook'
 import { makeStyles } from '@material-ui/core/styles';
 import { IauthFormState, submitClickActionCreator } from '../../reducers/authFormReducer'
+import { IauthState, loginActionCreator, logoutActionCreator } from '../../reducers/authReducer'
 
 
 interface IloginProps  {
   authFormState: IauthFormState,
-  authFormDispatch: any
+  authFormDispatch: any,
+  authState: IauthState,
+  authDispatch: any,
 }
 const useStyles = makeStyles({
   root: {
@@ -26,9 +30,20 @@ const useStyles = makeStyles({
 
 
 
-const Login: React.FC<IloginProps> = ({authFormState, authFormDispatch}) => {
+const Login: React.FC<IloginProps> = ({authFormState, authFormDispatch, authState, authDispatch}) => {
+
+  const {loading, request, error, clearError} = useHttp()
 
   const classes = useStyles()
+
+  const loginHandler = async () => {
+    authFormDispatch(submitClickActionCreator())
+    try {
+      const data = await request('/api/auth/login', 'POST', {email: authFormState.email, 
+                                                             password: authFormState.password})
+      authDispatch(loginActionCreator(data.token))
+    } catch (e) {}
+  }
 
   return (
     <div>
@@ -40,7 +55,7 @@ const Login: React.FC<IloginProps> = ({authFormState, authFormDispatch}) => {
           className = {classes.btn}
           variant="contained"
           disabled = {authFormState.submitDisabled}
-          onClick = {() => authFormDispatch(submitClickActionCreator())}
+          onClick = {loginHandler}
           >Default
         </Button>
         <div>{authFormState.email + '  ' + authFormState.password}</div>
