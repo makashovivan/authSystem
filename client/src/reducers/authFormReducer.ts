@@ -1,6 +1,7 @@
 const TYPEEMAIL = 'TYPEEMAIL'
 const TYPEPASSWORD = 'TYPEPASSWORD'
-const SUBMITCLICK = 'SUBMITCLICK'
+const BLOCKFORM = 'BLOCKFORM'
+const UNBLOCKFORM = 'UNBLOCKFORM'
 
 const MAILLERROR = 'mail error'
 const PASSWORDERROR = 'password error'
@@ -47,12 +48,19 @@ const checkCorrectness = (state: IauthFormState): boolean => {
 const authFormReducer = (state: IauthFormState, action: IauthAction) => {
   switch (action.type) {
 
-    case SUBMITCLICK:
+    case BLOCKFORM:
       state.passwordDisabled = true
       state.mailDisabled = true
       state.submitDisabled = true
-      console.log(SUBMITCLICK)
       return {...state}
+    
+    case UNBLOCKFORM:
+      state.passwordDisabled = false
+      state.mailDisabled = false
+      state.submitDisabled = false
+      state.email = ''
+      state.password = ''
+      return {...state}  
 
     case TYPEEMAIL:
       state.email = action.email!
@@ -63,19 +71,19 @@ const authFormReducer = (state: IauthFormState, action: IauthAction) => {
         state.errors.isMailError = false
         state.errors.mailError = ''
       }
-      checkCorrectness(state) ? state.submitDisabled = false : state.submitDisabled = true
+      state.submitDisabled = checkCorrectness(state) ? false : true
       return {...state}
 
     case TYPEPASSWORD:
       state.password = action.password!
-      if (state.password.length < 5) {
+      if (state.password.length < 7) {
         state.errors.isPasswordError = true
         state.errors.passwordError = PASSWORDERROR
       } else {
         state.errors.isPasswordError = false
         state.errors.passwordError = ''
       }
-      checkCorrectness(state) ? state.submitDisabled = false : state.submitDisabled = true
+      state.submitDisabled = checkCorrectness(state) ? false : true
       return {...state}
 
     default:
@@ -87,4 +95,5 @@ export default authFormReducer
 
 export const typePasswordActionCreator = (password: string) => ({type: TYPEPASSWORD, password})
 export const typeEmailActionCreator = (email: string) => ({type: TYPEEMAIL, email})
-export const submitClickActionCreator = () => ({type: SUBMITCLICK})
+export const blockFormActionCreator = () => ({type: BLOCKFORM})
+export const unBlockFormActionCreator = () => ({type: UNBLOCKFORM})
