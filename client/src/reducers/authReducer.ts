@@ -1,17 +1,16 @@
-
 const LOGIN = 'LOGIN'
 const LOGOUT = 'LOGOUT'
 export const storageName = 'userData'
 
 export interface IauthState {
   isAuth: boolean,
-  token: any,
+  token: string | null | undefined,
  
 }
 
 interface IauthAction {
   type: string,
-  token?: any,
+  token?: string | null,
 }
 
 export const authInitialState: IauthState = {
@@ -27,11 +26,13 @@ const authReducer = (state: IauthState, action: IauthAction) => {
       localStorage.setItem(storageName, JSON.stringify({
         token: action.token
       }))
+      state.isAuth = true
       return {...state}
 
     case LOGOUT:
       state.token = null
       localStorage.removeItem(storageName)
+      state.isAuth = false
       return {...state}
 
     default:
@@ -41,5 +42,5 @@ const authReducer = (state: IauthState, action: IauthAction) => {
 
 export default authReducer
 
-export const loginActionCreator = (token: any) => ({type: LOGIN, token})
+export const loginActionCreator = (token: string) => ({type: LOGIN, token})
 export const logoutActionCreator = () => ({type: LOGOUT})
