@@ -1,19 +1,24 @@
 import React from 'react'
 import AuthForm from '../AuthForm'
+
+import {useHttp} from '../../hooks/httpHook'
+
+import { IauthFormState, blockFormActionCreator, unBlockFormActionCreator } from '../../reducers/authFormReducer'
+import { IauthState, loginActionCreator} from '../../reducers/authReducer'
+import { openToastActionCreator } from '../../reducers/toastReducer'
+
 import Button from "@material-ui/core/Button";
 import Card from '@material-ui/core/Card';
-import {useHttp} from '../../hooks/httpHook'
 import { makeStyles } from '@material-ui/core/styles';
-import { IauthFormState, submitClickActionCreator } from '../../reducers/authFormReducer'
-import { IauthState, loginActionCreator, logoutActionCreator } from '../../reducers/authReducer'
-
 
 interface IloginProps  {
   authFormState: IauthFormState,
   authFormDispatch: any,
   authState: IauthState,
   authDispatch: any,
+  toastDispatch: any,
 }
+
 const useStyles = makeStyles({
   root: {
     margin: '0 auto',
@@ -30,24 +35,26 @@ const useStyles = makeStyles({
 
 
 
-const Login: React.FC<IloginProps> = ({authFormState, authFormDispatch, authState, authDispatch}) => {
+const Login: React.FC<IloginProps> = ({authFormState, authFormDispatch, authState, authDispatch, toastDispatch}) => {
 
   const {loading, request, error, clearError} = useHttp()
-
   const classes = useStyles()
 
   const loginHandler = async () => {
-    authFormDispatch(submitClickActionCreator())
+    authFormDispatch(blockFormActionCreator())
     try {
       const data = await request('api/auth/login', 'POST', {email: authFormState.email, 
                                                              password: authFormState.password})
       authDispatch(loginActionCreator(data.token))
-      console.log('REQUEST')
-    } catch (e) {}
+      authFormDispatch(unBlockFormActionCreator())
+    } catch (e) {
+      toastDispatch(openToastActionCreator(e.message, 'error'))
+      authFormDispatch(unBlockFormActionCreator())
+    }
   }
 
   return (
-    <div>
+    <div>    
       <Card className= {classes.root}>
         <div>LOGIN PAGE</div>
         <AuthForm authFormState = {authFormState} authFormDispatch = {authFormDispatch} />
