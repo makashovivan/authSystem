@@ -1,9 +1,7 @@
 import React, {useEffect, useReducer} from 'react'
 import {Route, Redirect, Switch, useHistory} from 'react-router-dom'
 
-import DocumentCreating from './pages/DocumentCreating'
 import Documents from './pages/Documents'
-import Document from './pages/Document'
 import Register from './pages/Register'
 import Login from './pages/Login' 
 
@@ -53,14 +51,8 @@ const App : React.FC = () => {
       </AppBar>       
       {authState.isAuth ? 
       <Switch>
-        <Route exact path = '/documentCreating'>
-          <DocumentCreating/>
-        </Route>
         <Route exact path = '/documents'>
-          <Documents authState = {authState} authDispatch = {authDispatch}/>
-        </Route>
-        <Route exact path = '/documents/:id'>
-          <Document/>
+          <Documents authState = {authState} authDispatch = {authDispatch} toastDispatch = {toastDispatch}/>
         </Route>
         <Redirect to = '/documents'/>
       </Switch>
