@@ -4,7 +4,7 @@ import { IUser } from './User'
 export interface IDocument extends Document {
   title: string,
   text: string,
-  date: Date,
+  date?: Date,
   owner: IUser['_id']
 }
 

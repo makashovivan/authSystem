@@ -46,9 +46,9 @@ const Login: React.FC<IloginProps> = ({authFormState, authFormDispatch, authStat
       const data = await request('api/auth/login', 'POST', {email: authFormState.email, 
                                                              password: authFormState.password})
       authDispatch(loginActionCreator(data.token))
-      authFormDispatch(unBlockFormActionCreator())
     } catch (e) {
       toastDispatch(openToastActionCreator(e.message, 'error'))
+    } finally {
       authFormDispatch(unBlockFormActionCreator())
     }
   }

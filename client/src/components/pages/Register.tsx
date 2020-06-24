@@ -43,10 +43,10 @@ const Register: React.FC<IRegisterProps> = ({authFormState, authFormDispatch, to
                                                              password: authFormState.password})
       toastDispatch(openToastActionCreator(data.message, 'success'))
       history.push('/login')
-      authFormDispatch(unBlockFormActionCreator())
     } catch (e) {
-      authFormDispatch(unBlockFormActionCreator())
       toastDispatch(openToastActionCreator(e.message, 'error'))
+    } finally {
+      authFormDispatch(unBlockFormActionCreator())
     }
   }
 
